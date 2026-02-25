@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Shop – ROSÉ Boutique</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Cormorant+Garamond:wght@300;400;500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+
+  <style>
+    .shop-section { padding: 70px 0; }
+
+    /* ── SIDEBAR FILTER ── */
+    .filter-sidebar {
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      border: 1px solid var(--border);
+      position: sticky;
+      top: 90px;
+    }
+
+    .filter-group { margin-bottom: 30px; }
+
+    .filter-group-title {
+      font-family: 'Jost', sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--dark);
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .filter-check { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; cursor: pointer; }
+
+    .filter-check input[type="checkbox"] { accent-color: var(--deep-rose); width: 16px; height: 16px; cursor: pointer; }
+
+    .filter-check label {
+      font-size: 0.88rem;
+      color: var(--text);
+      cursor: pointer;
+      flex: 1;
+    }
+
+    .filter-check .count { font-size: 0.75rem; color: var(--light-text); }
+
+    .price-range { width: 100%; accent-color: var(--rose); }
+
+    .price-display { display: flex; justify-content: space-between; font-size: 0.82rem; color: var(--light-text); margin-top: 8px; }
+
+    /* ── SORT BAR ── */
+    .sort-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .results-count {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      color: var(--light-text);
+    }
+
+    .sort-select {
+      border: 1.5px solid var(--border);
+      border-radius: 50px;
+      padding: 8px 18px;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.82rem;
+      color: var(--text);
+      outline: none;
+      background: white;
+      cursor: pointer;
+    }
+
+    /* ── FILTER PILLS ── */
+    .filter-pills-top {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 28px;
+    }
+
+    .filter-pill {
+      background: none;
+      border: 1.5px solid #E8D0D7;
+      color: var(--light-text);
+      padding: 7px 20px;
+      border-radius: 50px;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.78rem;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .filter-pill:hover, .filter-pill.active {
+      background: var(--deep-rose);
+      border-color: var(--deep-rose);
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ NAVBAR ══ -->
+<nav class="navbar navbar-expand-lg">
+  <div class="container">
+    <a class="navbar-brand" href="index.html">ROS<span>É</span></a>
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav mx-auto">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link active" href="shop.html">Shop</a></li>
+        <li class="nav-item"><a class="nav-link" href="product.html">Product</a></li>
+        <li class="nav-item"><a class="nav-link" href="cart.html">My Cart</a></li>
+      </ul>
+      <a class="cart-btn" href="cart.html">
+        <i class="fa fa-bag-shopping"></i> Cart
+        <span class="cart-badge">0</span>
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- ══ PAGE HERO ══ -->
+<div class="page-hero">
+  <div class="container">
+    <p><a href="index.html" class="breadcrumb-link">Home</a> &rsaquo; Shop</p>
+    <h1>Our <em>Collection</em></h1>
+    <p>Discover pieces made to make you shine</p>
+  </div>
+</div>
+
+<!-- ══ SHOP ══ -->
+<section class="shop-section">
+  <div class="container">
+    <!-- Top filter pills -->
+    <div class="filter-pills-top">
+      <button class="filter-pill active" onclick="filterProducts('all',this)">All Items</button>
+      <button class="filter-pill" onclick="filterProducts('dress',this)">Dresses</button>
+      <button class="filter-pill" onclick="filterProducts('top',this)">Tops</button>
+      <button class="filter-pill" onclick="filterProducts('jacket',this)">Jackets</button>
+      <button class="filter-pill" onclick="filterProducts('skirt',this)">Skirts</button>
+    </div>
+
+    <div class="row g-4">
+
+      <!-- Sidebar -->
+      <div class="col-lg-3 d-none d-lg-block">
+        <div class="filter-sidebar">
+          <div class="filter-group">
+            <div class="filter-group-title">Category</div>
+            <div class="filter-check"><input type="checkbox" id="f-dress" checked/><label for="f-dress">Dresses</label><span class="count">42</span></div>
+            <div class="filter-check"><input type="checkbox" id="f-top" checked/><label for="f-top">Tops & Blouses</label><span class="count">58</span></div>
+            <div class="filter-check"><input type="checkbox" id="f-jacket" checked/><label for="f-jacket">Jackets</label><span class="count">29</span></div>
+            <div class="filter-check"><input type="checkbox" id="f-skirt" checked/><label for="f-skirt">Skirts</label><span class="count">35</span></div>
+          </div>
+
+          <div class="filter-group">
+            <div class="filter-group-title">Size</div>
+            <div class="filter-check"><input type="checkbox" id="f-xs"/><label for="f-xs">XS</label></div>
+            <div class="filter-check"><input type="checkbox" id="f-s" checked/><label for="f-s">S</label></div>
+            <div class="filter-check"><input type="checkbox" id="f-m" checked/><label for="f-m">M</label></div>
+            <div class="filter-check"><input type="checkbox" id="f-l"/><label for="f-l">L</label></div>
+            <div class="filter-check"><input type="checkbox" id="f-xl"/><label for="f-xl">XL</label></div>
+          </div>
+
+          <div class="filter-group">
+            <div class="filter-group-title">Price Range</div>
+            <input type="range" class="price-range" min="0" max="200" value="150" oninput="document.getElementById('price-val').textContent='$'+this.value"/>
+            <div class="price-display"><span>$0</span><span id="price-val">$150</span></div>
+          </div>
+
+          <div class="filter-group">
+            <div class="filter-group-title">Color</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <div style="width:28px;height:28px;background:#F9D5DC;border-radius:50%;cursor:pointer;border:2px solid white;box-shadow:0 0 0 1.5px var(--rose);"></div>
+              <div style="width:28px;height:28px;background:#D4849A;border-radius:50%;cursor:pointer;border:2px solid white;"></div>
+              <div style="width:28px;height:28px;background:#C9A96E;border-radius:50%;cursor:pointer;border:2px solid white;"></div>
+              <div style="width:28px;height:28px;background:#2D1F22;border-radius:50%;cursor:pointer;border:2px solid white;"></div>
+              <div style="width:28px;height:28px;background:#FFF;border-radius:50%;cursor:pointer;border:2px solid #E8D0D7;"></div>
+              <div style="width:28px;height:28px;background:#B5D8C0;border-radius:50%;cursor:pointer;border:2px solid white;"></div>
+            </div>
+          </div>
+
+          <button class="btn-rose w-100" style="font-size:0.78rem;">Apply Filters</button>
+        </div>
+      </div>
+
+      <!-- Products Grid -->
+      <div class="col-lg-9">
+        <div class="sort-bar">
+          <div class="results-count">Showing <strong>8</strong> products</div>
+          <select class="sort-select">
+            <option>Sort by: Newest</option>
+            <option>Price: Low to High</option>
+            <option>Price: High to Low</option>
+            <option>Best Sellers</option>
+          </select>
+        </div>
+
+        <div class="row g-4" id="products-grid">
+
+          <div class="col-sm-6 col-xl-4 product-item" data-cat="dress">
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <span class="product-badge">New</span>
+                <img src="https://images.pexels.com/photos/1021693/pexels-photo-1021693.jpeg?auto=compress&w=500" alt="Floral Midi Dress"/>
+                <div class="product-actions">
+                  <button class="product-wish" onclick="toggleWish(this)"><i class="fa fa-heart"></i></button>
+                  <button class="product-add-btn" onclick="addToCart('Floral Midi Dress',89.99,'',this)">Add to Cart</button>
+                </div>
+              </div>
+              <div class="product-body">
+                <div class="product-cat">Dresses</div>
+                <a href="product.html" style="text-decoration:none;"><div class="product-name">Floral Midi Dress</div></a>
+                <div class="product-stars">★★★★★ <span>(124)</span></div>
+                <div class="product-price">$89.99</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-6 col-xl-4 product-item" data-cat="top">
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <span class="product-badge sale">Sale</span>
+                <img src="https://images.pexels.com/photos/1375849/pexels-photo-1375849.jpeg?auto=compress&w=500" alt="Satin Bow Blouse"/>
+                <div class="product-actions">
+                  <button class="product-wish" onclick="toggleWish(this)"><i class="fa fa-heart"></i></button>
+                  <button class="product-add-btn" onclick="addToCart('Satin Bow Blouse',49.99,'',this)">Add to Cart</button>
+                </div>
+              </div>
+              <div class="product-body">
+                <div class="product-cat">Tops</div>
+                <a href="product.html" style="text-decoration:none;"><div class="product-name">Satin Bow Blouse</div></a>
+                <div class="product-stars">★★★★☆ <span>(86)</span></div>
+                <div class="product-price">$49.99 <span class="product-price-old">$69.99</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-6 col-xl-4 product-item" data-cat="jacket">
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img src="https://images.pexels.com/photos/1926769/pexels-photo-1926769.jpeg?auto=compress&w=500" alt="Cream Puff Jacket"/>
+                <div class="product-actions">
+                  <button class="product-wish" onclick="toggleWish(this)"><i class="fa fa-heart"></i></button>
+                  <button class="product-add-btn" onclick="addToCart('Cream Puff Jacket',119.99,'',this)">Add to Cart</button>
+                </div>
+              </div>
+              <div class="product-body">
+                <div class="product-cat">Jackets</div>
+                <a href="product.html" style="text-decoration:none;"><div class="product-name">Cream Puff Jacket</div></a>
+                <div class="product-stars">★★★★★ <span>(201)</span></div>
+                <div class="product-price">$119.99</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-6 col-xl-4 product-item" data-cat="skirt">
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <span class="product-badge">Hot</span>
+                <img src="https://images.pexels.com/photos/291759/pexels-photo-291759.jpeg?auto=compress&w=500" alt="Pleated Mini Skirt"/>
+                <div class="product-actions">
+                  <button class="product-wish" onclick="toggleWish(this)"><i class="fa fa-heart"></i></button>
+                  <button class="product-add-btn" onclick="addToCart('Pleated Mini Skirt',59.99,'',this)">Add to Cart</button>
+                </div>
+              </div>
+              <div class="product-body">
+                <div class="product-cat">Skirts</div>
+                <a href="product.html" style="text-decoration:none;"><div class="product-name">Pleated Mini Skirt</div></a>
+                <div class="product-stars">★★★★★ <span>(178)</span></div>
+                <div class="product-price">$59.99</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-6 col-xl-4 product-item" data-cat="dress">
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img src="https://images.pexels.com/photos/2220316/pexels-photo-2220316.jpeg?auto=compress&w=500" alt="Rose Wrap Dress"/>
+                <div class="product-actions">
+                  <button class="product-wish" onclick="toggleWish(this)"><i class="fa fa-heart"></i></button>
+                  <button class="product-add-btn" onclick="addToCart('Rose Wrap Dress',74.99,'',this)">Add to Cart</button>
+                </div>
+              </div>
+              <div class="product-body">
+                <div class="product-cat">Dresses</div>
+                <a href="product.html" style="text-decoration:none;"><div class="product-name">Rose Wrap Dress</div></a>
+                <div class="product-stars">★★★★☆ <span>(92)</span></div>
+                <div class="product-price">$74.99</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-6 col-xl-4 product-item" data-cat="top">
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <span class="product-badge sale">Sale</span>
+                <img src="https://images.pexels.com/photos/1040945/pexels-photo-1040945.jpeg?auto=compress&w=500" alt="Lace Cami Top"/>
+                <div class="product-actions">
+                  <button class="product-wish" onclick="toggleWish(this)"><i class="fa fa-heart"></i></button>
+                  <button class="product-add-btn" onclick="addToCart('Lace Cami Top',34.99,'',this)">Add to Cart</button>
+                </div>
+              </div>
+              <div class="product-body">
+                <div class="product-cat">Tops</div>
+                <a href="product.html" style="text-decoration:none;"><div class="product-name">Lace Cami Top</div></a>
+                <div class="product-stars">★★★★★ <span>(143)</span></div>
+                <div class="product-price">$34.99 <span class="product-price-old">$49.99</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-6 col-xl-4 product-item" data-cat="jacket">
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <img src="https://images.pexels.com/photos/2220318/pexels-photo-2220318.jpeg?auto=compress&w=500" alt="Pastel Trench Coat"/>
+                <div class="product-actions">
+                  <button class="product-wish" onclick="toggleWish(this)"><i class="fa fa-heart"></i></button>
+                  <button class="product-add-btn" onclick="addToCart('Pastel Trench Coat',149.99,'',this)">Add to Cart</button>
+                </div>
+              </div>
+              <div class="product-body">
+                <div class="product-cat">Jackets</div>
+                <a href="product.html" style="text-decoration:none;"><div class="product-name">Pastel Trench Coat</div></a>
+                <div class="product-stars">★★★★★ <span>(67)</span></div>
+                <div class="product-price">$149.99</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-6 col-xl-4 product-item" data-cat="skirt">
+            <div class="product-card">
+              <div class="product-img-wrap">
+                <span class="product-badge">New</span>
+                <img src="https://images.pexels.com/photos/1926769/pexels-photo-1926769.jpeg?auto=compress&w=500" alt="Satin Slip Skirt"/>
+                <div class="product-actions">
+                  <button class="product-wish" onclick="toggleWish(this)"><i class="fa fa-heart"></i></button>
+                  <button class="product-add-btn" onclick="addToCart('Satin Slip Skirt',69.99,'',this)">Add to Cart</button>
+                </div>
+              </div>
+              <div class="product-body">
+                <div class="product-cat">Skirts</div>
+                <a href="product.html" style="text-decoration:none;"><div class="product-name">Satin Slip Skirt</div></a>
+                <div class="product-stars">★★★★☆ <span>(55)</span></div>
+                <div class="product-price">$69.99</div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /row -->
+      </div><!-- /col -->
+    </div><!-- /row -->
+  </div>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="container">
+    <div class="row g-5">
+      <div class="col-lg-4">
+        <div class="footer-brand">ROS<span>É</span></div>
+        <p class="footer-desc">Curated clothing for the modern woman who loves to bloom.</p>
+        <div class="social-icons">
+          <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-tiktok"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-pinterest"></i></a>
+        </div>
+      </div>
+      <div class="col-6 col-lg-2">
+        <div class="footer-title">Shop</div>
+        <ul class="footer-links">
+          <li><a href="shop.html">New Arrivals</a></li>
+          <li><a href="shop.html">Dresses</a></li>
+          <li><a href="shop.html">Tops</a></li>
+          <li><a href="shop.html">Sale</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-lg-2">
+        <div class="footer-title">Help</div>
+        <ul class="footer-links">
+          <li><a href="#">Shipping</a></li>
+          <li><a href="#">Returns</a></li>
+          <li><a href="#">Size Guide</a></li>
+          <li><a href="#">FAQs</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2025 ROSÉ Fashion Boutique. All rights reserved. 🌸</div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>

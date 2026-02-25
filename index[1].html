@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ROSÉ – Fashion Boutique</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Cormorant+Garamond:wght@300;400;500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+
+  <!-- Page-specific styles -->
+  <style>
+    /* ── HERO ── */
+    .hero {
+      min-height: 91vh;
+      background: linear-gradient(135deg, #FEF0F3 0%, #FDF5F0 50%, #FCF0F5 100%);
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -100px; right: -100px;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(212,132,154,0.18) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .hero-tag {
+      font-size: 0.73rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--rose);
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      animation: fadeUp 0.7s ease forwards;
+      opacity: 0;
+    }
+
+    .hero-tag::before { content: ''; display: inline-block; width: 38px; height: 1px; background: var(--rose); }
+
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.8rem, 6.5vw, 5.5rem);
+      line-height: 1.1;
+      color: var(--dark);
+      margin-bottom: 22px;
+      animation: fadeUp 0.7s ease 0.15s forwards;
+      opacity: 0;
+    }
+
+    .hero h1 em { color: var(--deep-rose); font-style: italic; }
+
+    .hero p {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.15rem;
+      color: var(--light-text);
+      max-width: 400px;
+      line-height: 1.8;
+      margin-bottom: 36px;
+      animation: fadeUp 0.7s ease 0.3s forwards;
+      opacity: 0;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      animation: fadeUp 0.7s ease 0.45s forwards;
+      opacity: 0;
+    }
+
+    .hero-image-area {
+      position: relative;
+      height: 560px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hero-img-frame {
+      width: 360px; height: 500px;
+      background: linear-gradient(160deg, #F9D5DC, #FDEAF0);
+      border-radius: 200px 200px 100px 100px;
+      overflow: hidden;
+      box-shadow: 0 30px 80px rgba(212,132,154,0.25);
+      animation: float 4s ease-in-out infinite, fadeIn 0.9s ease 0.4s forwards;
+      opacity: 0;
+    }
+
+    .hero-img-frame img { width: 100%; height: 100%; object-fit: cover; }
+
+    .hero-badge {
+      position: absolute;
+      background: white;
+      border-radius: 16px;
+      padding: 13px 18px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    }
+
+    .hero-badge.badge-1 { top: 80px; right: -10px; animation: fadeIn 0.8s ease 1s forwards; opacity: 0; }
+    .hero-badge.badge-2 { bottom: 100px; left: -20px; animation: fadeIn 0.8s ease 1.2s forwards; opacity: 0; }
+
+    .badge-label { font-size: 0.68rem; letter-spacing: 1px; color: var(--light-text); text-transform: uppercase; }
+    .badge-value { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--dark); font-weight: 600; }
+
+    /* ── CATEGORIES ── */
+    .categories-section { padding: 95px 0; background: var(--cream); }
+
+    .category-card {
+      position: relative;
+      border-radius: 20px;
+      overflow: hidden;
+      height: 400px;
+      cursor: pointer;
+      transition: transform 0.4s;
+      text-decoration: none;
+      display: block;
+    }
+
+    .category-card:hover { transform: translateY(-8px); }
+
+    .category-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s; }
+    .category-card:hover img { transform: scale(1.08); }
+
+    .category-overlay {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 38px 26px 26px;
+      background: linear-gradient(to top, rgba(45,31,34,0.72) 0%, transparent 100%);
+    }
+
+    .category-name { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: white; margin-bottom: 3px; }
+    .category-count { font-size: 0.75rem; color: rgba(255,255,255,0.68); letter-spacing: 2px; text-transform: uppercase; }
+
+    .category-arrow {
+      position: absolute;
+      top: 18px; right: 18px;
+      width: 40px; height: 40px;
+      background: rgba(255,255,255,0.18);
+      backdrop-filter: blur(5px);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: white;
+      opacity: 0;
+      transform: scale(0.8);
+      transition: all 0.3s;
+    }
+
+    .category-card:hover .category-arrow { opacity: 1; transform: scale(1); }
+
+    /* ── FEATURED PRODUCTS ── */
+    .featured-section { padding: 95px 0; background: var(--warm-white); }
+
+    /* ── PROMO BANNER ── */
+    .promo-section {
+      padding: 80px 0;
+      background: linear-gradient(135deg, var(--dark), #4A2535);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .promo-section::before {
+      content: '';
+      position: absolute;
+      top: -50%; left: -10%;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(212,132,154,0.18) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .promo-tag { font-size: 0.7rem; letter-spacing: 4px; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; }
+
+    .promo-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.4rem, 5vw, 4.2rem);
+      color: white;
+      line-height: 1.1;
+      margin-bottom: 18px;
+    }
+
+    .promo-title span { color: var(--blush); font-style: italic; }
+
+    .promo-desc {
+      font-family: 'Cormorant Garamond', serif;
+      color: rgba(255,255,255,0.62);
+      font-size: 1.08rem;
+      line-height: 1.8;
+      margin-bottom: 32px;
+      max-width: 420px;
+    }
+
+    .countdown { display: flex; gap: 18px; margin-bottom: 36px; }
+
+    .count-box {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.11);
+      border-radius: 14px;
+      padding: 15px 18px;
+      text-align: center;
+      min-width: 68px;
+    }
+
+    .count-num { font-family: 'Playfair Display', serif; font-size: 1.9rem; color: white; line-height: 1; }
+    .count-label { font-size: 0.63rem; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.45); margin-top: 4px; }
+
+    .promo-img-frame {
+      height: 440px;
+      background: rgba(255,255,255,0.04);
+      border-radius: 200px 200px 100px 100px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.09);
+    }
+
+    .promo-img-frame img { width: 100%; height: 100%; object-fit: cover; }
+
+    /* ── TESTIMONIALS ── */
+    .testimonials-section { padding: 95px 0; background: var(--cream); }
+
+    .testimonial-card {
+      background: white;
+      border-radius: 20px;
+      padding: 34px 28px;
+      border: 1px solid #F2E0E5;
+      transition: all 0.3s;
+      height: 100%;
+    }
+
+    .testimonial-card:hover { box-shadow: 0 15px 40px rgba(212,132,154,0.14); transform: translateY(-4px); }
+
+    .testimonial-stars { color: var(--gold); font-size: 0.88rem; margin-bottom: 16px; }
+
+    .testimonial-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.02rem;
+      line-height: 1.8;
+      color: var(--text);
+      margin-bottom: 22px;
+    }
+
+    .testimonial-author { display: flex; align-items: center; gap: 12px; }
+
+    .author-avatar {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      overflow: hidden;
+      flex-shrink: 0;
+      background: var(--blush);
+    }
+
+    .author-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+    .author-name { font-family: 'Playfair Display', serif; font-size: 0.92rem; color: var(--dark); }
+    .author-tag { font-size: 0.7rem; color: var(--light-text); letter-spacing: 1px; }
+
+    /* ── NEWSLETTER ── */
+    .newsletter-section { padding: 78px 0; background: linear-gradient(135deg, #FEF0F3, #FDF8F0); text-align: center; }
+
+    .newsletter-title { font-family: 'Playfair Display', serif; font-size: clamp(1.9rem, 4vw, 2.9rem); color: var(--dark); margin-bottom: 12px; }
+    .newsletter-title em { color: var(--deep-rose); font-style: italic; }
+
+    .newsletter-desc { font-family: 'Cormorant Garamond', serif; color: var(--light-text); font-size: 1.08rem; margin-bottom: 34px; }
+
+    .newsletter-form {
+      display: flex;
+      max-width: 460px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 50px;
+      border: 1.5px solid #E8D0D7;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(212,132,154,0.11);
+    }
+
+    .newsletter-input {
+      flex: 1;
+      border: none; outline: none;
+      padding: 15px 22px;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.88rem;
+      color: var(--text);
+      background: transparent;
+    }
+
+    .newsletter-btn {
+      background: var(--deep-rose);
+      color: white;
+      border: none;
+      padding: 13px 26px;
+      border-radius: 0 50px 50px 0;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.8rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .newsletter-btn:hover { background: var(--dark); }
+  </style>
+</head>
+<body>
+
+<!-- ══ NAVBAR ══ -->
+<nav class="navbar navbar-expand-lg">
+  <div class="container">
+    <a class="navbar-brand" href="index.html">ROS<span>É</span></a>
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav mx-auto">
+        <li class="nav-item"><a class="nav-link active" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="shop.html">Shop</a></li>
+        <li class="nav-item"><a class="nav-link" href="product.html">Product</a></li>
+        <li class="nav-item"><a class="nav-link" href="cart.html">My Cart</a></li>
+      </ul>
+      <a class="cart-btn" href="cart.html">
+        <i class="fa fa-bag-shopping"></i> Cart
+        <span class="cart-badge">0</span>
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- ══ HERO ══ -->
+<section class="hero">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-6">
+        <div class="hero-tag">New Collection 2025</div>
+        <h1>Dress Like<br>You're <em>Blooming</em></h1>
+        <p>Curated pieces that celebrate femininity. Soft pastels, bold florals — fashion that makes you feel like yourself.</p>
+        <div class="hero-buttons">
+          <a href="shop.html" class="btn-rose">Shop Now</a>
+          <a href="shop.html" class="btn-outline-rose">View Collections</a>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="hero-image-area">
+          <div class="hero-img-frame">
+            <!-- Using a reliable placeholder image with fashion colors -->
+            <img src="https://picsum.photos/seed/fashion1/600/800" alt="Fashion Model"/>
+          </div>
+          <div class="hero-badge badge-1">
+            <div class="badge-label">Happy Customers</div>
+            <div class="badge-value">12,000+ 💕</div>
+          </div>
+          <div class="hero-badge badge-2">
+            <div class="badge-label">New Arrivals</div>
+            <div class="badge-value">Spring '25 ✨</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ MARQUEE ══ -->
+<div class="marquee-section">
+  <div class="marquee-track">
+    <span class="marquee-item">Free shipping over $60</span>
+    <span class="marquee-item">New spring collection just dropped</span>
+    <span class="marquee-item">Use code ROSELOVE for 15% off</span>
+    <span class="marquee-item">Sustainable & ethically made</span>
+    <span class="marquee-item">30-day easy returns</span>
+    <span class="marquee-item">Free shipping over $60</span>
+    <span class="marquee-item">New spring collection just dropped</span>
+    <span class="marquee-item">Use code ROSELOVE for 15% off</span>
+    <span class="marquee-item">Sustainable & ethically made</span>
+    <span class="marquee-item">30-day easy returns</span>
+  </div>
+</div>
+
+<!-- ══ CATEGORIES ══ -->
+<section class="categories-section">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-tag">Explore</div>
+      <h2 class="section-title">Shop by <em>Collection</em></h2>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-6 col-lg-4">
+        <a href="shop.html?cat=dress" class="category-card">
+          <img src="https://images.pexels.com/photos/1536619/pexels-photo-1536619.jpeg?auto=compress&w=600" alt="Dresses"/>
+          <div class="category-overlay">
+            <div class="category-name">Dresses</div>
+            <div class="category-count">42 pieces</div>
+          </div>
+          <div class="category-arrow"><i class="fa fa-arrow-right"></i></div>
+        </a>
+      </div>
+      <div class="col-md-6 col-lg-4">
+        <a href="shop.html?cat=top" class="category-card">
+          <img src="https://images.pexels.com/photos/2220316/pexels-photo-2220316.jpeg?auto=compress&w=600" alt="Tops"/>
+          <div class="category-overlay">
+            <div class="category-name">Tops & Blouses</div>
+            <div class="category-count">58 pieces</div>
+          </div>
+          <div class="category-arrow"><i class="fa fa-arrow-right"></i></div>
+        </a>
+      </div>
+      <div class="col-md-6 col-lg-4">
+        <a href="shop.html?cat=jacket" class="category-card">
+          <img src="https://images.pexels.com/photos/1040945/pexels-photo-1040945.jpeg?auto=compress&w=600" alt="Outerwear"/>
+          <div class="category-overlay">
+            <div class="category-name">Outerwear</div>
+            <div class="category-count">29 pieces</div>
+          </div>
+          <div class="category-arrow"><i class="fa fa-arrow-right"></i></div>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FEATURED PRODUCTS ══ -->
+<section class="featured-section">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-tag">Trending</div>
+      <h2 class="section-title">New <em>Arrivals</em></h2>
+    </div>
+    <div class="row g-4">
+
+      <div class="col-sm-6 col-lg-3">
+        <div class="product-card">
+          <div class="product-img-wrap">
+            <span class="product-badge">New</span>
+            <img src="https://images.pexels.com/photos/1021693/pexels-photo-1021693.jpeg?auto=compress&w=500" alt="Floral Midi Dress"/>
+            <div class="product-actions">
+              <button class="product-wish" onclick="toggleWish(this)"><i class="fa fa-heart"></i></button>
+              <button class="product-add-btn" onclick="addToCart('Floral Midi Dress', 89.99, '', this)">Add to Cart</button>
+            </div>
+          </div>
+          <div class="product-body">
+            <div class="product-cat">Dresses</div>
+            <div class="product-name">Floral Midi Dress</div>
+            <div class="product-stars">★★★★★ <span>(124)</span></div>
+            <div class="product-price">$89.99</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-6 col-lg-3">
+        <div class="product-card">
+          <div class="product-img-wrap">
+            <span class="product-badge sale">Sale</span>
+            <img src="https://images.pexels.com/photos/1375849/pexels-photo-1375849.jpeg?auto=compress&w=500" alt="Satin Bow Blouse"/>
+            <div class="product-actions">
+              <button class="product-wish" onclick="toggleWish(this)"><i class="fa fa-heart"></i></button>
+              <button class="product-add-btn" onclick="addToCart('Satin Bow Blouse', 49.99, '', this)">Add to Cart</button>
+            </div>
+          </div>
+          <div class="product-body">
+            <div class="product-cat">Tops</div>
+            <div class="product-name">Satin Bow Blouse</div>
+            <div class="product-stars">★★★★☆ <span>(86)</span></div>
+            <div class="product-price">$49.99 <span class="product-price-old">$69.99</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-6 col-lg-3">
+        <div class="product-card">
+          <div class="product-img-wrap">
+            <img src="https://images.pexels.com/photos/1926769/pexels-photo-1926769.jpeg?auto=compress&w=500" alt="Cream Puff Jacket"/>
+            <div class="product-actions">
+              <button class="product-wish" onclick="toggleWish(this)"><i class="fa fa-heart"></i></button>
+              <button class="product-add-btn" onclick="addToCart('Cream Puff Jacket', 119.99, '', this)">Add to Cart</button>
+            </div>
+          </div>
+          <div class="product-body">
+            <div class="product-cat">Jackets</div>
+            <div class="product-name">Cream Puff Jacket</div>
+            <div class="product-stars">★★★★★ <span>(201)</span></div>
+            <div class="product-price">$119.99</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-6 col-lg-3">
+        <div class="product-card">
+          <div class="product-img-wrap">
+            <span class="product-badge">Hot</span>
+            <img src="https://images.pexels.com/photos/291759/pexels-photo-291759.jpeg?auto=compress&w=500" alt="Pleated Mini Skirt"/>
+            <div class="product-actions">
+              <button class="product-wish" onclick="toggleWish(this)"><i class="fa fa-heart"></i></button>
+              <button class="product-add-btn" onclick="addToCart('Pleated Mini Skirt', 59.99, '', this)">Add to Cart</button>
+            </div>
+          </div>
+          <div class="product-body">
+            <div class="product-cat">Skirts</div>
+            <div class="product-name">Pleated Mini Skirt</div>
+            <div class="product-stars">★★★★★ <span>(178)</span></div>
+            <div class="product-price">$59.99</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="text-center mt-5">
+      <a href="shop.html" class="btn-outline-rose">View All Products</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══ PROMO BANNER ══ -->
+<section class="promo-section">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-7">
+        <div class="promo-tag">Limited Time Offer ✦</div>
+        <h2 class="promo-title">Spring Sale<br><span>Up to 40% Off</span></h2>
+        <p class="promo-desc">Our biggest sale of the season is here. Shop our curated spring collection and refresh your wardrobe with pieces you'll love forever.</p>
+        <div class="countdown">
+          <div class="count-box"><div class="count-num" id="days">00</div><div class="count-label">Days</div></div>
+          <div class="count-box"><div class="count-num" id="hours">00</div><div class="count-label">Hours</div></div>
+          <div class="count-box"><div class="count-num" id="mins">00</div><div class="count-label">Mins</div></div>
+          <div class="count-box"><div class="count-num" id="secs">00</div><div class="count-label">Secs</div></div>
+        </div>
+        <a href="shop.html" class="btn-rose">Shop the Sale</a>
+      </div>
+      <div class="col-lg-5 d-none d-lg-block">
+        <div class="promo-img-frame">
+          <img src="https://images.pexels.com/photos/2220318/pexels-photo-2220318.jpeg?auto=compress&w=600" alt="Sale Collection"/>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ TESTIMONIALS ══ -->
+<section class="testimonials-section">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-tag">Reviews</div>
+      <h2 class="section-title">What Our <em>Girls</em> Say</h2>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="testimonial-card">
+          <div class="testimonial-stars">★★★★★</div>
+          <p class="testimonial-text">"I ordered the Floral Midi Dress for a garden party and got so many compliments. The quality is absolutely amazing and it fit perfectly!"</p>
+          <div class="testimonial-author">
+            <div class="author-avatar"><img src="https://i.pravatar.cc/80?img=47" alt="Sophie"/></div>
+            <div><div class="author-name">Sophie Laurent</div><div class="author-tag">⭐ Verified Buyer</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="testimonial-card">
+          <div class="testimonial-stars">★★★★★</div>
+          <p class="testimonial-text">"ROSÉ has become my go-to boutique. Every piece is thoughtfully designed and the packaging is so cute. Feels like opening a gift every time!"</p>
+          <div class="testimonial-author">
+            <div class="author-avatar"><img src="https://i.pravatar.cc/80?img=44" alt="Mia"/></div>
+            <div><div class="author-name">Mia Rosenberg</div><div class="author-tag">⭐ Verified Buyer</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="testimonial-card">
+          <div class="testimonial-stars">★★★★★</div>
+          <p class="testimonial-text">"The Cream Puff Jacket is literally a dream! I've worn it three days in a row. Super fast shipping too — will definitely shop here again!"</p>
+          <div class="testimonial-author">
+            <div class="author-avatar"><img src="https://i.pravatar.cc/80?img=49" alt="Ella"/></div>
+            <div><div class="author-name">Ella Fontaine</div><div class="author-tag">⭐ Verified Buyer</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ NEWSLETTER ══ -->
+<section class="newsletter-section">
+  <div class="container">
+    <div class="section-tag">Exclusive Access</div>
+    <h2 class="newsletter-title">Join the <em>ROSÉ Club</em></h2>
+    <p class="newsletter-desc">Subscribe and get 10% off your first order + early access to new collections.</p>
+    <div class="newsletter-form">
+      <input type="email" class="newsletter-input" placeholder="Your email address..."/>
+      <button class="newsletter-btn" onclick="showToast('Thanks for subscribing! 🌸')">Subscribe</button>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="container">
+    <div class="row g-5">
+      <div class="col-lg-4">
+        <div class="footer-brand">ROS<span>É</span></div>
+        <p class="footer-desc">Curated clothing for the modern woman who loves to bloom. Fashion that celebrates you.</p>
+        <div class="social-icons">
+          <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-tiktok"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-pinterest"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+        </div>
+      </div>
+      <div class="col-6 col-lg-2">
+        <div class="footer-title">Shop</div>
+        <ul class="footer-links">
+          <li><a href="shop.html">New Arrivals</a></li>
+          <li><a href="shop.html">Dresses</a></li>
+          <li><a href="shop.html">Tops</a></li>
+          <li><a href="shop.html">Jackets</a></li>
+          <li><a href="shop.html">Sale</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-lg-2">
+        <div class="footer-title">Help</div>
+        <ul class="footer-links">
+          <li><a href="#">Shipping Info</a></li>
+          <li><a href="#">Returns</a></li>
+          <li><a href="#">Size Guide</a></li>
+          <li><a href="#">FAQs</a></li>
+          <li><a href="#">Contact Us</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-lg-2">
+        <div class="footer-title">Company</div>
+        <ul class="footer-links">
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Sustainability</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Careers</a></li>
+        </ul>
+      </div>
+      <div class="col-6 col-lg-2">
+        <div class="footer-title">Contact</div>
+        <ul class="footer-links">
+          <li><a href="#">hello@rose.com</a></li>
+          <li><a href="#">+1 (800) 767-3123</a></li>
+          <li><a href="#">Mon–Fri 9–6pm</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2025 ROSÉ Fashion Boutique. All rights reserved. Made with 🌸</div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="script.js"></script>
+<script>
+  startCountdown(['days','hours','mins','secs'], 58);
+</script>
+</body>
+</html>
